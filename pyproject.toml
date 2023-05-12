@@ -19,6 +19,9 @@ selenium = "^4.9.1"
 matplotlib = "^3.7.1"
 nltk = "^3.8.1"
 pymystem3 = "^0.2.0"
+tinkoff-investments = "^0.2.0b57"
+python-dotenv = "^1.0.0"
+mplfinance = "^0.12.9b7"
 
 
 [build-system]
