@@ -22,6 +22,7 @@ pymystem3 = "^0.2.0"
 tinkoff-investments = "^0.2.0b57"
 python-dotenv = "^1.0.0"
 mplfinance = "^0.12.9b7"
+scikit-learn = "^1.2.2"
 
 
 [build-system]
