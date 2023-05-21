@@ -96,6 +96,8 @@ It's designed to automatically identify the underlying structure of the data and
 The learning process in SOFNN involves the self-organization of the fuzzy rules, which are generated through a clustering process that groups similar data points together and determines the centers of the fuzzy sets. 
 These fuzzy rules are then optimized to minimize the error between the network output and the desired output.
 
+The SOFNN was used in work \cite{BOLLEN20111} and author proposed that "Twitter mood predicts the stock market". And tweets were segreagated into multiple clusters and then with a combination of market data passed into lower networks.
+
 While implementing an architecture, for I chose KMeans clusterization algorithm \cite{Hartigan1979} for sequence locator, the module which is responsible for finding the best matching fuzzy rule for a given input pattern with the number of clusters equal to 4. 
 For sequence identifier I have used a two layered fully connected network with 100 neuons on each layer.
 I have experimented with different optimisers, losses and learning rates, but sadly enough, was not able to get satisfactory results.
@@ -105,9 +107,55 @@ I have experimented with different optimisers, losses and learning rates, but sa
 The techniques and experiments in related papers got me thinking about combining it with reinforcement learning techniques.
 Because reinforcement Learning, is a type of machine learning in which an agent learns how to take actions in an environment in order to maximize a reward.
 
-The environment ---------------------------------
+The environment consist of a share price graph with observing space size equal to number of embedding features (sets automatically on initialisation) plus current market values.
 
-For the agent action space I chose 3 discrete numbers, representing a stages
+For the agent action space I chose 3 discrete numbers, representing an actions to buy, to sell or to stay out of market.
+As the agent observes the current state of the environment and chooses an action, the environment transitions to a new state, and also returns a reward that indicates the consequences of the action. 
+
+Environment also stores agent last prediction to measure the distance between real market data.
+The reward policy takes the distance and rewards if it does not exceed certain threshold.
+The environment is considered terminated when the relative position exceeds a threshold as well. In another words, when agent loses its money.
+
+The main idea behind Q-learning is that we maximize reward based on policy 
+
+\begin{align}
+\pi^*(s)  = \text{argmax}_a Q^*(s,a), \forall s,
+\end{align}
+where $\pi^*$ is our policy model. 
+Calculating the prediction loss in a DQN is a calculation of Temporal Difference error $\delta$ which derives from \href{https://towardsdatascience.com/how-does-a-dqn-approximate-bellmans-equation-53e591d5e33}{Bellman equation}
+
+
+\begin{align}
+\delta = Q(s, a) - [r + \gamma \max_a{Q(s^{'}, a)}] \nonumber
+\end{align}
+
+Where the discount $\gamma$  ensures the sum converges
+\begin{align}
+\gamma \in[0, 1] \nonumber
+\end{align}
+
+We optimise prediction loss
+\begin{align}
+L = \frac{1}{\left|B\right|} \sum_{s,a,s^{'},r\in B}{L(\delta)},
+\end{align}
+
+via optimising \href{https://en.wikipedia.org/wiki/Huber_loss}{Huber loss} $L(\delta)$
+
+Where B is a batch of transitions sampled from the replay memory
+
+\begin{align}
+where \quad L(\delta) = \begin{dcases*}
+    \frac{1}{2}*\delta^2, & for $ |\delta| <= 1 $,\\
+    |\delta|-\frac{1}{2}, & otherwise. 
+    \end{dcases*} \nonumber 
+\end{align}
+
+So, the value network is a neural network that takes input from the environment and returns a State-value function that evaluates how well the agent is in a given state. It evaluates the long-term value of a state.
+A policy network is a neural network that takes input from the environment and returns a probability distribution (for discrete action) that specifies the agent's strategy. The policy network allows the agent to choose the best action based on the received information about the state of the environment.
+During training, the policy network is used to select actions in the environment, while the target network is used to calculate the target values for the Q-learning update step. In this way, the target network provides a more stable estimate of the Q-values, which helps to prevent oscillation and divergence during training.
+
+For the policy net architecture I firstly experimented with a FCN, and then applied LSTM approach with sequential input.
+
 
 
 
@@ -276,6 +324,13 @@ Test MSE 0.007547988662526805
 Test MAPE 0.07306125655346457
 Test SOAS 0.4117647058823529
 Test S3PS 4.930981460943817
+
+
+RL FCN
+Test MSE 166.67163537761755
+Test MAPE 0.05134015350531124
+Test SOAS 0.36
+Test S3PS -9.333128986263029
 
 
 In this section, you need to list and describe the achieved results. It is crucial to have the results of the experiments for the other approaches. This is needed to be able to compare your results with some competitors. Most preferably, you should provide some references with results on the same problem.
