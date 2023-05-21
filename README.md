@@ -1,6 +1,9 @@
 # STONKS - Stock Market Forecasting Using News Articles With Reinforcement An Sequence Learning
 A final project for MIPT NLP 2023 course https://ods.ai/tracks/nlp-course-spring-23/competitions/final-projects-nlp-course-spring-23
 
+## [Report.pdf](report.pdf) 
+
+
 ![preview](animation.gif)
 
 ## Installation
@@ -18,7 +21,7 @@ make install
 make notebook
 ```
 
-## Important content
+## Important scripts and files
 
 1. [dataset notebook](notebooks/dataset.ipynb)
 1. [dataset source](data%2Fnews_stocks.csv)
