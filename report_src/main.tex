@@ -20,7 +20,7 @@
 \maketitle
 \begin{abstract}
     I believe, that there is a correlation between price change direction of a particular share and news articles. The purpose of this project is to predict market price for next day, each time depending on news of the current. The project consists of my own StocksNews dataset, the baseline solution, experiments with existing related solutions, implementation of custom Stocks reinforcement learning environment, making of proposed solution using a combination of reinforcement learning and sequence learning techniques.
-    \url{https://github.com/irusland/nlpystocks}.
+    \url{https://github.com/irusland/stonks}.
 \end{abstract}
 
 
@@ -90,7 +90,7 @@ After implementation and 100 epochs of MSELoss via Adam optimisation algorithm I
 
 \subsection{Sequence learning using Fuzzy logic}
 
-A Self-Organizing Fuzzy Neural Network is proposed by \cite{SalimiBadr2022}.
+A Self-Organizing Fuzzy Neural Network is proposed by \newline \cite{SalimiBadr2022}.
 SOFNN is a type of artificial neural network that combines the techniques of fuzzy logic and neural networks.
 Interestingly enough, this architecture solves the task of unsupervised learning.
 It's designed to automatically identify the underlying structure of the data and create fuzzy rules that accurately describe the input-output relationship of the system being modeled. It consists of four layers: input layer, fuzzy layer, normalization layer, and output layer.
@@ -179,7 +179,7 @@ The second stage in the notebook \texttt{/notebooks/stocks-dataset.ipynb} was to
 As an employee of Tinkoff bank and an active contributor of \href{https://github.com/Tinkoff/invest-python}{invest-python library} I used the Tinkoff Investments OpenAPI \footnote{Tinkoff Invest OpenAPI could be found ~\href{https://www.tinkoff.ru/invest/open-api/}{here}.} to load the Sberbank privileged shares with FIGI number \texttt{BBG0047315Y7} for the period of previous year. I chose the Sberbank shares instrument because it has high liquidity and high volatility. I believe that such instrument is quite popular among investors.
 
 Having two separate datasets, I have joined them together by matching a \texttt{date} column that contained current date. 
-See the details in \texttt{notebooks/dataset.ipynb}. The example can be seen in Fig. \ref{fig:dataset}
+See the details in \texttt{dataset.ipynb}. The example can be seen in Fig. \ref{fig:dataset}
 
 \begin{figure}[!tbh]
     \centering
@@ -314,7 +314,7 @@ I also experimented with bert embeddings using sentence transformers and \href{h
  \hline
  $BATCH-SIZE$   & 128    & bathes from the replay buffer\\
  $FAIL-DIFF$ & 0.05 & max agent deviation to terminate env\\ 
- $DIFF-REWARD$ & 0.001 & how close agent should be to the target to get a reward\\
+ $DIFF-REWARD$ & 0.001 & how close agent should for reward\\
  $SEQUENCE-LEN$ & 42 & length of data for previous days  \\
  $GAMMA$   & 0.99    & discount factor\\
  $EPS-START$ & 0.9    & start of epsilon\\
@@ -370,7 +370,7 @@ In the course of experimenting I implemented a prototype for each solution and g
 
 A baselines are good starting points, because some of them have reached the FCN proposed solution.
 
-Even though the proposed model did not overcome the LSTM by \cite{Sen_2021} in regression metrics, it showed a decent results in classification metrics.
+Even though the proposed model did not overcome the LSTM by \newline \cite{Sen_2021} in regression metrics, it showed a decent results in classification metrics.
 S3PS metric shows how much percent we could possibly gain when following a strategy. 
 With that being said, it means the reinforcement learning techniques can be useful for solving a human-like tasks, including trading.
 
