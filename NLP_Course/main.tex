@@ -19,7 +19,7 @@
 \begin{document}
 \maketitle
 \begin{abstract}
-    I believed, that there is a correlation between price change direction of a particular share and news articles. The purpose of this project is to predict market price for next day, each time depending on news of the current day. The project consists of my own StocksNews dataset, the baseline solution, experiments with existing related solutions, implementation of custom Stocks reinforcement learning environment, making of proposed solution using a combination of reinforcement learning and sequence learning techniques.
+    I believe, that there is a correlation between price change direction of a particular share and news articles. The purpose of this project is to predict market price for next day, each time depending on news of the current. The project consists of my own StocksNews dataset, the baseline solution, experiments with existing related solutions, implementation of custom Stocks reinforcement learning environment, making of proposed solution using a combination of reinforcement learning and sequence learning techniques.
     \url{https://github.com/irusland/nlpystocks}.
 \end{abstract}
 
@@ -66,19 +66,40 @@ I was the only one participant in the team and responsible for several goals:
 \section{Related Work}
 \label{sec:related}
 
-In this section I will provide my understanding of currently available solutions 
+In this section I will provide my understanding and implementation of currently available solutions to the forecasting problem
 
-\subsection{Sequence learning}
+\subsection{Sequence learning using recurrent logic}
+A Robust Predictive Model was presented in the paper \cite{Sen_2021}.
+The key idea for the prediction is to process not only the current moment of time but also previous data with some kind of lag measured in days.
+The authors introduce us to their successful experiment with recurrent neural network. They also show the results of some linear-based models but, they say "stock price movement is a highly non-linear process".
+
+The experiment consists of preparation of the data with some kind of Natural Language Processing, which is unclear to me, how did they manage to get embeddings from sentences. So I chose the TF-IDF embeddings, and min-max scaler for recieved data.
+
+The main model contained LSTM \cite{HochSchm97} module and fully connected layers to predict a single float number - the price.
+LSTM (Long Short-Term Memory) is a type of recurrent neural network (RNN). The main advantage of LSTMs over traditional RNNs is their ability to learn and store long-term dependencies in the input sequence. This is achieved through the use of specific memory cells that store information and a set of gates that control access to these memory cells. 
+The memory cells and gates allow LSTMs to selectively remember or forget information from the input sequence, which makes them good for tasks that rely on understanding context and long-term dependencies.
+
+I was not able to find a suitable source code for solution, some haven't provided a source code links, and others have been implemented in different programming languages like java, 
+Since i am using python as a tool in this research, I have tried to implement my own representation according to experiment notes in papers.
+
+The news were classified into moods such as positive, negative, neutral and one-hot encoded.
+The Lag was set to 3, as the best one mentioned in paper so model receives news from 3 previous time points. The hidden size was 42, this parameter controls the number of parameters in the LSTM layer, and thus affects the model's capacity to capture complex patterns and dependencies in the input data.
+
+After implementation I achieved pretty decent results which will be described in Results\ref{sec:results}
+
+\subsection{Sequence learning using Fuzzy logic}
+
+A Self-Organizing Fuzzy Neural Network is proposed in paper by \cite{SalimiBadr2022}
+SOFNN is a type of artificial neural network that combines the techniques of fuzzy logic and neural networks.
+Interestingly enough, this architecture solves the task of unsupervised learning.
+It's designed to automatically identify the underlying structure of the data and create fuzzy rules that accurately describe the input-output relationship of the system being modeled. It consists of four layers: input layer, fuzzy layer, normalization layer, and output layer.
+The learning process in SOFNN involves the self-organization of the fuzzy rules, which are generated through a clustering process that groups similar data points together and determines the centers of the fuzzy sets. 
+These fuzzy rules are then optimized through a gradient descent algorithm that adjusts the weights and biases to minimize the error between the network output and the desired output.
 
 
 
 
-I was not able to find a suitable source code for related work solutions, some haven't provided a source code links, and others have been implemented in different programming languages like java, 
-Since i am using python as a tool in this research, i have tried to implement my own representation according to experiment notes in papers.
 
-In this section, you will describe in details the existing approaches to the problem you work on. For each approach, you need to provide a reference. 
-
-\cite{levenshtein1966binary} is a sample reference to the previous art. \cite{levenshtein1966dvoichnie} is a sample reference in Russian.
 
 \section{Model Description}
 Here you need to write a detailed description of your approach. It is important to mention that this description should give more details than the descriptions from section \ref{sec:related}\footnote{This is an example of internal references and footnotes at the same time.}. 
@@ -118,6 +139,13 @@ As an employee of Tinkoff bank and an active contributor of \href{https://github
 Having two separate datasets, I have joined them together by matching a \texttt{date} column that contained current date. 
 See the details in \texttt{notebooks/dataset.ipynb}.
 
+\begin{figure}[!tbh]
+    \centering
+    \includegraphics[width=0.9\linewidth]{dataset.png}
+    \caption{Dataset samples represented as DataFrame.}
+    \label{datased}
+\end{figure}
+
 I represent some statistics of resulting StocksNews dataset on Tab.~\ref{tab:statistics} The dataset was split into two parts: train and test with proportion of 88/22 percent accordingy. It's important to mention that this is a time series dataset so I did not use any king of shuffling. 
 
 \begin{table}[tbh!]
@@ -146,7 +174,7 @@ Date range & 2022.05.08 - 2023.02.10 & 2023.02.10 - 2023.05.06 \\
     \label{fig:sber}
 \end{figure}
 
-When constructing a baseline with TF-IDF\footnote{TF-IDF model to get the sentence embeddings. Details at ~\href{https://ru.wikipedia.org/wiki/TF-IDF}{Wikipedia}.} embeddings, I have used lowercase sentences, \texttt{mystem} for lemmatizaton, \texttt{nltk} for stopwords filtering.
+When constructing a baseline with TF-IDF\footnote{TF-IDF model to get the sentence embeddings. Details at ~\href{https://ru.wikipedia.org/wiki/TF-IDF}{Wikipedia} or in work by \cite{Ramos1999}.} embeddings, I have used lowercase sentences, \texttt{mystem} for lemmatizaton, \texttt{nltk} for stopwords filtering.
 
 It's worth mentioning that the using the other dataset preprocessing techniques have not been done and could be other possible research topics which is out of scope of current.
 
@@ -223,7 +251,6 @@ where \quad P_i = \left| 1 - (y_{i+1}/y_{i}) \right| \nonumber
 
 It is based on SOAS but represents possible percentage gain if we follow a strategy sugested by model.
 
-First of all, you should describe the metric(s) you were using to evaluate your approach. Most likely a metric description will include a formula.
 
 \subsection{Experiment Setup}
 Secondly, you need to describe the design of your experiment, e.g. how many runs there were, how the data split was done. The important details of your model, like hyper-parameters used in the experiments, and so on.
@@ -232,6 +259,15 @@ Secondly, you need to describe the design of your experiment, e.g. how many runs
 Another important feature is that you could provide here the description of some simple approaches for your problem, like logistic regression over TF-IDF embedding for text classification. The baselines are needed is there is no previous art on the problem you are presenting.
 
 \section{Results}
+\label{sec:results}
+
+Results for LSTM
+Test MSE 0.007547988662526805
+Test MAPE 0.07306125655346457
+Test SOAS 0.4117647058823529
+Test S3PS 4.930981460943817
+
+
 In this section, you need to list and describe the achieved results. It is crucial to have the results of the experiments for the other approaches. This is needed to be able to compare your results with some competitors. Most preferably, you should provide some references with results on the same problem.
 
 Almost inevitably the results are presented as a table, but it is also possible to have a graph, i.e. a figure.
