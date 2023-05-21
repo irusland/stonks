@@ -4,6 +4,17 @@ A final project for MIPT NLP 2023 course https://ods.ai/tracks/nlp-course-spring
 ## [Report.pdf](report.pdf) 
 
 
+## Results
+
+|   Method Name  |   MSE  |   MAPE  | SOAS | S3PS  |
+|-----|-----|-----|------|-------|
+ | RIDGE | 1253.37 | 0.12 | 0.44 | 4.85% |
+ | TREES | 3919.90 | 0.25 | 0.46 | -14.12% |
+ | LSTM | 155.04 | 0.04 | 0.41 | 4.24% |
+ | DQNFCN | 2027.74 | 0.20 | 0.44 | -9.75% |
+ | DQNLSTM | 166.67 | 0.05 | 0.56 | 7.33% |
+
+
 ![preview](animation.gif)
 
 ## Installation
