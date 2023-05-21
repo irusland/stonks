@@ -49,6 +49,19 @@ make notebook
 [Tinkoff](https://www.tinkoff.ru) &
 [Finam](https://www.finam.ru)
 
+## Citation
+
+```
+@software{Sirazhetdinov_STONKS_-_Stock_2023,
+    author = {Sirazhetdinov, Ruslan},
+    month = may,
+    title = {{STONKS - Stock Market Forecasting Using News Articles With Reinforcement And Sequence Learning}},
+    url = {https://github.com/irusland/stonks},
+    version = {0.0.1},
+    year = {2023}
+}
+```
+
 ## License
 
 MIT License
