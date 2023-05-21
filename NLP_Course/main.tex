@@ -7,7 +7,7 @@
 \usepackage{graphicx}
 \usepackage{hyperref}
 \usepackage{mathtools}
-
+\usepackage{multirow}
 
 \title{STONKS - Stock Market Forecasting Using News Articles With Reinforcement And Sequence Learning}
 \author{Ruslan Sirazhetdinov} 
@@ -100,7 +100,7 @@ The SOFNN was used in work \cite{BOLLEN20111} and author proposed that "Twitter 
 
 While implementing an architecture, for I chose KMeans clusterization algorithm \cite{Hartigan1979} for sequence locator, the module which is responsible for finding the best matching fuzzy rule for a given input pattern with the number of clusters equal to 4. 
 For sequence identifier I have used a two layered fully connected network with 100 neuons on each layer.
-I have experimented with different optimisers, losses and learning rates, but sadly enough, was not able to get satisfactory results.
+I have experimented with different optimisers, losses and learning rates, but sadly enough, was not able to get satisfactory results. So i would not include a method in final comparison
 
 
 \section{Model Description}
@@ -154,29 +154,10 @@ So, the value network is a neural network that takes input from the environment 
 A policy network is a neural network that takes input from the environment and returns a probability distribution (for discrete action) that specifies the agent's strategy. The policy network allows the agent to choose the best action based on the received information about the state of the environment.
 During training, the policy network is used to select actions in the environment, while the target network is used to calculate the target values for the Q-learning update step. In this way, the target network provides a more stable estimate of the Q-values, which helps to prevent oscillation and divergence during training.
 
-For the policy net architecture I firstly experimented with a FCN, and then applied LSTM approach with sequential input.
-
-
-
-
-
-Here you need to write a detailed description of your approach. It is important to mention that this description should give more details than the descriptions from section \ref{sec:related}\footnote{This is an example of internal references and footnotes at the same time.}. 
-
-You will likely be providing a figure to better present your approach. A sample circle is presented on Fig.~\ref{fig:circle}.
-
-The other possible contents of this section are formulae. They could be on a new line:
-$$S=\pi r^2,$$
-or they could be inline, e.g. if you want to describe the used variables, like $S$ is an area of a circle, while $r$ is its radius. 
-
-\begin{figure}[!tbh]
-    \centering
-    \includegraphics[width=0.3\linewidth]{circle.png}
-    \caption{A sample circle.}
-    \label{fig:circle}
-\end{figure}
+For the policy net architecture I firstly experimented with a FCN, and then applied LSTM approach with sequential input. And got interresting results
 
 \section{Dataset}
-
+\label{sec:dataset}
 For the task of predicting stock market i needed a dataset with news articles and current market state.
 I have researched for avalable datasets, and there where plenty of twitter's related ones.
 I wanted to experiment on Russian stock market via using Russian news. 
@@ -248,7 +229,7 @@ For implementing a related work solutions I have labeled every sentence with one
 
 
 \section{Experiments}
-This section should include several subsections.
+\label{sec:experiments}
 \subsection{Metrics}
 The evaluation of every solution was scored by 2 types of metrics: regression and classification metrics.
 My goal was not only to see how close the forecast is to real data via checking regression metrics score, but also to check whether the predictions are correct in the terms of market change direction. And see if you can rely on it during trading.
@@ -256,7 +237,7 @@ For that I have used classification metrics.
 
 Following sections contains $\hat{y}$ and $y$ as a forecast values and actual values respectively.
 
-\paragraph{Regression metrics}  
+\paragraph{Regression metrics}
 
 The first is Mean Squared Error:
 \begin{align}
@@ -311,52 +292,99 @@ It is based on SOAS but represents possible percentage gain if we follow a strat
 
 
 \subsection{Experiment Setup}
-Secondly, you need to describe the design of your experiment, e.g. how many runs there were, how the data split was done. The important details of your model, like hyper-parameters used in the experiments, and so on.
+I setup the experiment and train the proposed model for 5000 episodes (epochs).
+The hyperparameters are show in Tab.~\ref{tab:hyperparams}
+It was convinient to run training procedure in jupyter notebook, so I represented learning algorithm on the graph as shown in \texttt{/notebooks/lstm-gym-embeddings.ipynb}
+
+For the sake of experimenting I also experimented with bert embeddings using sentence transformers and \href{https://huggingface.co/cointegrated/rubert-tiny}{rubert-tiny} pretraind model.
+
+\begin{table}[tbh!]
+\begin{center}
+\begin{tabular}{ |r||c|l|  }
+ \hline
+ \multicolumn{3}{|c|}{Hyperparameter List} \\
+ \hline
+ Param Name & value & description \\
+ \hline
+ $BATCH-SIZE$   & 128    & bathes from the replay buffer\\
+ $FAIL-DIFF$ & 0.05 & max agent deviation to terminate env\\ 
+ $DIFF-REWARD$ & 0.001 & how close agent should be to the target to get a reward\\
+ $SEQUENCE-LEN$ & 42 & length of data for previous days  \\
+ $GAMMA$   & 0.99    & discount factor\\
+ $EPS-START$ & 0.9    & start of epsilon\\
+ $EPS-END$ &  0.05    & final value of epsilon\\
+ $EPS-DECAY$ &  1000    & rate of exponential decay\\
+ $TAU$ &  0.005    &update rate of the target network\\
+ $LR$ &  1e-4    &learning rate\\
+ \hline
+\end{tabular}
+\caption{Hyperparameters of proposed method.}
+\label{tab:hyperparams}
+\end{center}
+\end{table}
+
 
 \subsection{Baselines}
-Another important feature is that you could provide here the description of some simple approaches for your problem, like logistic regression over TF-IDF embedding for text classification. The baselines are needed is there is no previous art on the problem you are presenting.
+First of all I implemented a baselines with TF-IDF embeddings and multiple linear or non-liner method over it. 
+I got some results to start with and some functions which helped me in the future solutions.
+For more info, please visit a \texttt{/notebooks/baseline.ipynb}
 
 \section{Results}
 \label{sec:results}
 
-Results for LSTM
-Test MSE 0.007547988662526805
-Test MAPE 0.07306125655346457
-Test SOAS 0.4117647058823529
-Test S3PS 4.930981460943817
+In the Tab. \ref{tab:results} we see that 
 
-
-RL FCN
-Test MSE 166.67163537761755
-Test MAPE 0.05134015350531124
-Test SOAS 0.36
-Test S3PS -9.333128986263029
-
-
-In this section, you need to list and describe the achieved results. It is crucial to have the results of the experiments for the other approaches. This is needed to be able to compare your results with some competitors. Most preferably, you should provide some references with results on the same problem.
-
-Almost inevitably the results are presented as a table, but it is also possible to have a graph, i.e. a figure.
-
-You need also to provide an interpretation of the presented results, to describe some features. E.g. your approach shows higher results on the short texts or by one metric instead of another.
-
-Also in this section, you could provide some results for your model inference. The samples could be found in Tab.~\ref{tab:output}.
-
-\begin{table}[!tbh]
-    \centering
-    \begin{tabular}{|c|}
-\hline
-Это пример вывода вашей модели на русском.\\
-This is a sample output of your model in English.
-\\
-\hline
-    \end{tabular}
-    \caption{Output samples.}
-    \label{tab:output}
+\begin{table}[tbh!]
+\begin{center}
+\begin{tabular}{ |c||c|c|c|c|  }
+ \hline
+ \multicolumn{5}{|c|}{Results comparison} \\
+ \hline
+ Method Name & MSE & MAPE & SOAS & S3PS \\
+ \hline
+ \hline
+ RIDGE & 1253.37 & 0.12 & 0.44 & 4.85\% \\
+ \hline
+ TREES & 3919.90 & 0.25 & 0.46 & -14.12\% \\
+ \hline
+ LSTM & 155.04 & 0.04 & 0.41 & 4.24\% \\
+ \hline
+ DQNFCN & 2027.74 & 0.20 & 0.44 & -9.75\% \\
+ \hline
+ DQNLSTM & 166.67 & 0.05 & 0.56 &  7.33\% \\
+ \hline
+\end{tabular}
+\caption{Results of all methods of research.}
+\label{tab:results}
+\end{center}
 \end{table}
 
-\section{Conclusion}
-In this section, you need to describe all the work in short: what you have done and what has been achieved. E.g. you have collected a dataset, made a markup for it and developed a model showing the best results compared to other models. 
+In the course of experimenting I implemented a prototype for each solution and graphical representation for better understanding of the results.
 
+A baselines are good starting points, because some of them have reached the FCN proposed solution.
+
+Even though the proposed model did not overcome the LSTM by \cite{Sen_2021} in regression metrics, it showed a decent results in classification metrics.
+With that being said, it means the reinforcement learning techniques can be useful for solving a human-like tasks, including trading.
+
+S3PS metric shows how much percent we could possibly gain when following a strategy. 
+
+The sample of model forecast results could be found in Fig.~\ref{fig:forecasts}.
+
+\begin{figure}[!tbh]
+    \centering
+    \includegraphics[width=0.9\linewidth]{forecasts.png}
+    \caption{Price forecast split by red dashed line.}
+    \label{fig:forecasts}
+\end{figure}
+
+\section{Conclusion}
+It was quite interesting research for me, I have managed to make my own dataset\ref{sec:dataset}, implement available solutions using research reports which were mentioned in section\ref{sec:related}, explore \href{https://pypi.org/project/gymnasium/}{gymnasium deep q-learning framework}, and make my own RL environment where i did all the experiments \ref{sec:experiments}
+
+Its worth mentioning that there are plenty of other research possibilities left out of scope of current work, including hyperparameter tuning, model ensembles, different architectures, also sources of news articles, text preprocessing, other companies shares and so on.
+
+To conclude, reinforcement learning is a powerful machine learning technique that has shown great promise in solving complex real-world problems.
+
+\pagebreak
 \bibliographystyle{apalike}
 \bibliography{lit}
 \end{document}
