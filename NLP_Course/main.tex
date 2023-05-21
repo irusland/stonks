@@ -6,6 +6,7 @@
 \usepackage[english]{babel}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{mathtools}
 
 
 \title{STONKS - Stock Market Forecasting Using News Articles With Reinforcement And Sequence Learning}
@@ -26,12 +27,23 @@
 
 \section{Introduction}
 Stock market if a highly variable environment and for the its forecasting you need to know how to act in certain situation. 
+There is no doubt that stocks market prediction is a highly non linear relation to the news articles. The situation on the market can change drastically in a moments without any prior information because of the insiders policies, non disclosure agreements. But still, there are many cases when a random tweet from Elon Musk could literally heat up the whole investors community.
 
-The topic of predicting stock market using NLP techniques 
+The news could be a pretty helpful tool for decision making. 
+It most likely has a little average impact on the market in general, but news could provide some hints for enhancing the forecasts.
 
+Its important to know these aspects during making a decision to invest or not. This work could be a possible baseline for a more complex trading bot that processes all the big data information in realtime.
 
-First of all, you will need to write the whole report in English, with a few exceptions mentioned below.
-This section is devoted to a problem motivation. You should answer the question of why the problem you were working on is important. Also, you should describe what is unique in your approach to this problem, what are the differences to other approaches.
+Primarily, the approach to forecast the timeseries is to train a particular model, it may be a linear or statistically or neural network based model. Ensembles or a combination of models is also possible. You have some training data, and you validate you model on the data that has not been seen by the model. 
+
+The difference in my approach is that I have tried to use a human-like actions.
+The requirements for the model is to make a decision to invest or not, or temporarily suspend any trading.
+It's possible with the use of reinforcement learning and building a deep Q-networks.
+This differs from the regression solving models, because after getting the model's predictions there are many ways to operate with received data. The naive approach could be hard-coding some instructions based on conditional logic. For example: if the market price goes up and reaches the certain threshold we make a decision to buy shares. 
+This is a major flaw of such algorithms in my opinion, and that is why I have chose to mimic real human's actions.
+
+In this work I proposed a sequence learning network architecture and implemented an reinforcement environment for training of such network.
+
 \subsection{Team}
 \textbf{Sirazhetdinov Ruslan} \href{mailto:sirazhetdinov.rr@phystech.edu}{sirazhetdinov.rr@phystech.edu}
 
@@ -98,6 +110,7 @@ The notebook \texttt{/notebooks/news-scraping.ipynb} consist of scraping a web p
 
 It is important to mention that the dataset is available for the research purposes. 
 Since Finam does allow to use the information with giving a link to in according to \href{https://www.finam.ru/about/copyright/}{copyright policy}
+Each row contains HTTP link to the source.
 
 The second stage in the notebook \texttt{/notebooks/stocks-dataset.ipynb} was to load a stock market values from stock exchange. 
 As an employee of Tinkoff bank and an active contributor of \href{https://github.com/Tinkoff/invest-python}{invest-python library} i used the Tinkoff Investments OpenAPI \footnote{Tinkoff Invest OpenAPI could be found ~\href{https://www.tinkoff.ru/invest/open-api/}{here}.} to load the Sberbank privileged shares with FIGI number \texttt{BBG0047315Y7} for the period of previous year. I chose the Sberbank shares instrument because it has high liquidity and high volatility. I believe that such instrument is quite popular among investors.
@@ -151,6 +164,65 @@ For implementing a related work solutions I have labeled every sentence with one
 \section{Experiments}
 This section should include several subsections.
 \subsection{Metrics}
+The evaluation of every solution was scored by 2 types of metrics: regression and classification metrics.
+My goal was not only to see how close the forecast is to real data via checking regression metrics score, but also to check whether the predictions are correct in the terms of market change direction. And see if you can rely on it during trading.
+For that I have used classification metrics.
+
+Following sections contains $\hat{y}$ and $y$ as a forecast values and actual values respectively.
+
+\paragraph{Regression metrics}  
+
+The first is Mean Squared Error:
+\begin{align}
+MSE(y, \hat{y})=\sum_{i=1}^{D}(y_i-\hat{y}_i)^2,
+\end{align}
+this metric was chosen to have a general sense of how close the forecasts are.
+
+For intuitive interpretation the Mean Absolute Percentage Error was used:
+\begin{align}
+{MAPE(y, \hat{y})={\frac {100\%}{n}}\sum _{t=1}^{n}\left|{\frac {y_{t}-\hat{y}_{t}}{y_{t}}}\right|}
+\end{align}
+\paragraph{Classification metrics}
+
+The accuracy was also used to have a comprehension of models correct choices. I named it as Stock Option Accuracy Score:
+
+\begin{align}
+SOAS(y, \hat{y}) = ACC(z, \hat{z}),
+\end{align}
+\begin{align}
+where \quad ACC(z, \hat{z}) = \frac{\left|\{z_i == \hat{z}_i \mid i = 0...n\}\right|}{n}, \nonumber 
+\end{align}
+ \begin{align}
+    where \quad z_{i} = \begin{dcases*}
+        1, & if $ y_{i+1} - y_{i} > 0 $,\\
+        0, & otherwise. 
+        \end{dcases*} \nonumber 
+  \end{align}
+ \begin{align}
+    where \quad \hat{z}_{i} = \begin{dcases*}
+        1, & if $ \hat{y}_{i+1} - \hat{y}_{i} > 0 $,\\
+        0, & otherwise. 
+        \end{dcases*} \nonumber 
+  \end{align}
+
+
+I also came up with a metric Stock Possible Profit Percent Score or S3PS for short:
+\begin{align}
+S3PS(y, \hat{y}) = 100 * [\prod_{i=0}^{n-1}{(1 + C_i)} - 1],
+\end{align}
+\begin{align}
+where \quad C_i = \begin{dcases*}
+        P_i, & if $ y_{i+1} - y_{i} > 0  \quad and \quad \hat{y}_{i+1} - \hat{y}_{i} > 0 $,\\
+        P_i, & if $ y_{i+1} - y_{i} <= 0  \quad and \quad \hat{y}_{i+1} - \hat{y}_{i} <= 0 $,\\
+        -P_i, & otherwise. 
+        \end{dcases*} \nonumber 
+\end{align}
+\begin{align}
+where \quad P_i = \left| 1 - (y_{i+1}/y_{i}) \right| \nonumber 
+\end{align}
+
+It is based on SOAS but represents possible percentage gain if we follow a strategy sugested by model.
+
 First of all, you should describe the metric(s) you were using to evaluate your approach. Most likely a metric description will include a formula.
 
 \subsection{Experiment Setup}
