@@ -26,15 +26,15 @@
 
 
 \section{Introduction}
-Stock market if a highly variable environment and for the its forecasting you need to know how to act in certain situation. 
-There is no doubt that stocks market prediction is a highly non linear relation to the news articles. The situation on the market can change drastically in a moments without any prior information because of the insiders policies, non disclosure agreements. But still, there are many cases when a random tweet from Elon Musk could literally heat up the whole investors community.
+Stock market if a highly variable environment and for forecasting you need to know how to act in certain situation. 
+There is no doubt that stocks market prediction has highly non-linear relation to the news articles. The situation on the market can change drastically in a moments without any prior information because of the insiders policies and non disclosure agreements. But still, there are many cases when a random tweet for example, from Elon Musk could literally heat up the whole investors community.
 
 The news could be a pretty helpful tool for decision making. 
 It most likely has a little average impact on the market in general, but news could provide some hints for enhancing the forecasts.
 
-Its important to know these aspects during making a decision to invest or not. This work could be a possible baseline for a more complex trading bot that processes all the big data information in realtime.
+It's important to know these aspects during making a decision to invest or not. This work could be a possible baseline for a more complex trading bot that processes all the big data information in realtime.
 
-Primarily, the approach to forecast the timeseries is to train a particular model, it may be a linear or statistically or neural network based model. Ensembles or a combination of models is also possible. You have some training data, and you validate you model on the data that has not been seen by the model. 
+Primarily, the approach to forecast the timeseries is to train a particular model, it may be a linear or statistically or neural network based. Ensembles or a combination of models is also possible. You have some training procedure, then comes validation on the data that has not been seen by the net.
 
 The difference in my approach is that I have tried to use a human-like actions.
 The requirements for the model is to make a decision to invest or not, or temporarily suspend any trading.
@@ -42,7 +42,7 @@ It's possible with the use of reinforcement learning and building a deep Q-netwo
 This differs from the regression solving models, because after getting the model's predictions there are many ways to operate with received data. The naive approach could be hard-coding some instructions based on conditional logic. For example: if the market price goes up and reaches the certain threshold we make a decision to buy shares. 
 This is a major flaw of such algorithms in my opinion, and that is why I have chose to mimic real human's actions.
 
-In this work I proposed a sequence learning network architecture and implemented an reinforcement environment for training of such network.
+In this work I proposed a sequence learning network architecture and implemented reinforcement environment for training.
 
 \subsection{Team}
 \textbf{Sirazhetdinov Ruslan} \href{mailto:sirazhetdinov.rr@phystech.edu}{sirazhetdinov.rr@phystech.edu}
@@ -57,32 +57,33 @@ I was the only one participant in the team and responsible for several goals:
   \item  adapting existing models from related works for dataset.
   \item  developing of custom reinforcement learning environment.
   \item  implementation of proposed solution.
+  \item  preparing a source code repository.
   \item  gathering the results.
   \item  writing a report.
-  
+
 \end{enumerate}
 
 
 \section{Related Work}
 \label{sec:related}
 
-In this section I will provide my understanding and implementation of currently available solutions to the forecasting problem
+In this section I will provide my understanding and implementation of currently available solutions to the forecasting problem.
 
 \subsection{Sequence learning using recurrent logic}
 A Robust Predictive Model was presented in the paper \cite{Sen_2021}.
 The key idea for the prediction is to process not only the current moment of time but also previous data with some kind of lag measured in days.
-The authors introduce us to their successful experiment with recurrent neural network. They also show the results of some linear-based models but, they say "stock price movement is a highly non-linear process".
+The authors introduce us to their successful experiment with recurrent neural network. They also show the results of some linear-based models but, they state that "stock price movement is a highly non-linear process" with which I agree.
 
-The experiment consists of preparation of the data with some kind of Natural Language Processing, which is unclear to me, how did they manage to get embeddings from sentences. So I chose the TF-IDF embeddings, and min-max scaler for recieved data.
+The experiment consists of preparing the data with some kind of Natural Language Processing, which was unclear to me, how did they manage to get embeddings from sentences. So I chose the TF-IDF embeddings, and min-max scaler for gathered data.
 
 The main model contained LSTM \cite{HochSchm97} module and fully connected layers to predict a single float number - the price.
 LSTM (Long Short-Term Memory) is a type of recurrent neural network (RNN). The main advantage of LSTMs over traditional RNNs is their ability to learn and store long-term dependencies in the input sequence. This is achieved through the use of specific memory cells that store information and a set of gates that control access to these memory cells. 
 The memory cells and gates allow LSTMs to selectively remember or forget information from the input sequence, which makes them good for tasks that rely on understanding context and long-term dependencies.
 
 I was not able to find a suitable source code for solution, some haven't provided a source code links, and others have been implemented in different programming languages like java, 
-Since i am using python as a tool in this research, I have tried to implement my own representation according to experiment notes in papers.
+Since I am using python as a tool in this research, I have tried to implement my own representation according to experiment notes in papers.
 
-The news were classified into moods such as positive, negative, neutral and one-hot encoded.
+The news were classified into moods such as positive, negative, neutral and then one-hot encoded.
 The Lag was set to 3, as the best one mentioned in paper so model receives news from 3 previous time points. The hidden size was 42, this parameter controls the number of parameters in the LSTM layer, and thus affects the model's capacity to capture complex patterns and dependencies in the input data.
 
 After implementation and 100 epochs of MSELoss via Adam optimisation algorithm I achieved pretty decent results which will be described in Results\ref{sec:results}
@@ -93,7 +94,8 @@ A Self-Organizing Fuzzy Neural Network is proposed by \cite{SalimiBadr2022}.
 SOFNN is a type of artificial neural network that combines the techniques of fuzzy logic and neural networks.
 Interestingly enough, this architecture solves the task of unsupervised learning.
 It's designed to automatically identify the underlying structure of the data and create fuzzy rules that accurately describe the input-output relationship of the system being modeled. It consists of four layers: input layer, fuzzy layer, normalization layer, and output layer.
-The learning process in SOFNN involves the self-organization of the fuzzy rules, which are generated through a clustering process that groups similar data points together and determines the centers of the fuzzy sets. 
+
+The learning process in SOFNN involves the self-organization of the fuzzy rules, which are generated through a clustering that groups similar data points together and determines the centers of the fuzzy sets. 
 These fuzzy rules are then optimized to minimize the error between the network output and the desired output.
 
 The SOFNN was used in work \cite{BOLLEN20111} and author proposed that "Twitter mood predicts the stock market". And tweets were segreagated into multiple clusters and then with a combination of market data passed into lower networks.
@@ -105,7 +107,7 @@ I have experimented with different optimisers, losses and learning rates, but sa
 
 \section{Model Description}
 The techniques and experiments in related papers got me thinking about combining it with reinforcement learning techniques.
-Because reinforcement Learning, is a type of machine learning in which an agent learns how to take actions in an environment in order to maximize a reward.
+Because reinforcement learning, is a type of machine learning in which an agent learns how to take actions in an environment in order to maximize a reward.
 
 The environment consist of a share price graph with observing space size equal to number of embedding features (sets automatically on initialisation) plus current market values.
 
@@ -114,7 +116,7 @@ As the agent observes the current state of the environment and chooses an action
 
 Environment also stores agent last prediction to measure the distance between real market data.
 The reward policy takes the distance and rewards if it does not exceed certain threshold.
-The environment is considered terminated when the relative position exceeds a threshold as well. In another words, when agent loses its money.
+The environment is considered terminated when the relative position exceeds a threshold as well. In another words, when agent loses money.
 
 The main idea behind Q-learning is that we maximize reward based on policy 
 
@@ -122,6 +124,7 @@ The main idea behind Q-learning is that we maximize reward based on policy
 \pi^*(s)  = \text{argmax}_a Q^*(s,a), \forall s,
 \end{align}
 where $\pi^*$ is our policy model. 
+
 Calculating the prediction loss in a DQN is a calculation of Temporal Difference error $\delta$ which derives from \href{https://towardsdatascience.com/how-does-a-dqn-approximate-bellmans-equation-53e591d5e33}{Bellman equation}
 
 
@@ -151,54 +154,57 @@ where \quad L(\delta) = \begin{dcases*}
 \end{align}
 
 So, the value network is a neural network that takes input from the environment and returns a State-value function that evaluates how well the agent is in a given state. It evaluates the long-term value of a state.
-A policy network is a neural network that takes input from the environment and returns a probability distribution (for discrete action) that specifies the agent's strategy. The policy network allows the agent to choose the best action based on the received information about the state of the environment.
+A policy network is a neural network that takes input from the environment and returns a probability distribution for discrete action that specifies the agent's strategy. The policy network allows the agent to choose the best action based on the received information about the state of the environment.
 During training, the policy network is used to select actions in the environment, while the target network is used to calculate the target values for the Q-learning update step. In this way, the target network provides a more stable estimate of the Q-values, which helps to prevent oscillation and divergence during training.
 
-For the policy net architecture I firstly experimented with a FCN, and then applied LSTM approach with sequential input. And got interresting results
+For the policy net architecture I firstly experimented with a FCN (fully connected neural network), and then applied LSTM (long short-term memory) approach with sequential input. And got interresting results.
 
 \section{Dataset}
 \label{sec:dataset}
-For the task of predicting stock market i needed a dataset with news articles and current market state.
-I have researched for avalable datasets, and there where plenty of twitter's related ones.
+For the task of predicting stock market I needed a dataset with news articles and current market state.
+I have researched for avalable datasets, and there were plenty of twitter's related ones.
 I wanted to experiment on Russian stock market via using Russian news. 
-And specifically, i did not chose the existing news datasets because they were too broad on topics. My goal was to process only financial related articles.
-So my choice was the Finam's newsline\footnote{Raw content from Finam's newline could be found ~\href{https://www.finam.ru/publications/selection/united/}{here}.} also i was their client.
+And specifically, I did not chose the existing news datasets because they were too broad on topics. My goal was to process only financial related articles.
+So my choice was the Finam's newsline\footnote{Raw content from Finam's newline could be found ~\href{https://www.finam.ru/publications/selection/united/}{here}.}.
 
 I should mention that, it was not easy to get it downloaded. 
 My first naive approach was to just load it using \href{https://pypi.org/project/requests/}{python requests}. But it turned out that they had an interface, where you need to click on the button in order to load another portion of news. So i discovered \href{https://pypi.org/project/selenium/}{python selenium}, a new approach to emulate human-like gestures and button clicks on the web page.
 The notebook \texttt{/notebooks/news-scraping.ipynb} consist of scraping a web page with news.
 
 It is important to mention that the dataset is available for the research purposes. 
-Since Finam does allow to use the information with giving a link to in according to \href{https://www.finam.ru/about/copyright/}{copyright policy}
+Since Finam allows to use the information with giving a link to it according to \href{https://www.finam.ru/about/copyright/}{copyright policy}
 Each row contains HTTP link to the source.
 
 The second stage in the notebook \texttt{/notebooks/stocks-dataset.ipynb} was to load a stock market values from stock exchange. 
-As an employee of Tinkoff bank and an active contributor of \href{https://github.com/Tinkoff/invest-python}{invest-python library} i used the Tinkoff Investments OpenAPI \footnote{Tinkoff Invest OpenAPI could be found ~\href{https://www.tinkoff.ru/invest/open-api/}{here}.} to load the Sberbank privileged shares with FIGI number \texttt{BBG0047315Y7} for the period of previous year. I chose the Sberbank shares instrument because it has high liquidity and high volatility. I believe that such instrument is quite popular among investors.
+As an employee of Tinkoff bank and an active contributor of \href{https://github.com/Tinkoff/invest-python}{invest-python library} I used the Tinkoff Investments OpenAPI \footnote{Tinkoff Invest OpenAPI could be found ~\href{https://www.tinkoff.ru/invest/open-api/}{here}.} to load the Sberbank privileged shares with FIGI number \texttt{BBG0047315Y7} for the period of previous year. I chose the Sberbank shares instrument because it has high liquidity and high volatility. I believe that such instrument is quite popular among investors.
 
 Having two separate datasets, I have joined them together by matching a \texttt{date} column that contained current date. 
-See the details in \texttt{notebooks/dataset.ipynb}.
+See the details in \texttt{notebooks/dataset.ipynb}. The example can be seen in Fig. \ref{fig:dataset}
 
 \begin{figure}[!tbh]
     \centering
     \includegraphics[width=0.9\linewidth]{dataset.png}
     \caption{Dataset samples represented as DataFrame.}
-    \label{datased}
+    \label{fig:dataset}
 \end{figure}
 
-I represent some statistics of resulting StocksNews dataset on Tab.~\ref{tab:statistics} The dataset was split into two parts: train and test with proportion of 88/22 percent accordingy. It's important to mention that this is a time series dataset so I did not use any king of shuffling. 
+I represent some statistics of resulting StocksNews dataset on Tab.~\ref{tab:statistics} The dataset was split into two parts: train and test with proportion of 88/22 percent accordingy. It's important to mention that this is a time series dataset so I did not use any kind of shuffling. 
 
 \begin{table}[tbh!]
 \begin{center}
-\begin{tabular}[t]{|l|cc|}
+\begin{tabular}[t]{|l|c|c|}
 \hline
 %\cline{2-4}
  & Train & Test \\
 \hline
+\hline
 Proportion & 0.88 & 0.22  \\
+\hline
 Size & 23879 & 6735 \\
+\hline
 Vocabulary size & \multicolumn{2}{c|}{16507} \\
+\hline
 Date range & 2022.05.08 - 2023.02.10 & 2023.02.10 - 2023.05.06 \\
-
 \hline
 \end{tabular}
 \caption{Statistics of the StocksNews dataset.}
@@ -215,7 +221,7 @@ Date range & 2022.05.08 - 2023.02.10 & 2023.02.10 - 2023.05.06 \\
 
 When constructing a baseline with TF-IDF\footnote{TF-IDF model to get the sentence embeddings. Details at ~\href{https://ru.wikipedia.org/wiki/TF-IDF}{Wikipedia} or in work by \cite{Ramos1999}.} embeddings, I have used lowercase sentences, \texttt{mystem} for lemmatizaton, \texttt{nltk} for stopwords filtering.
 
-It's worth mentioning that the using the other dataset preprocessing techniques have not been done and could be other possible research topics which is out of scope of current.
+It's worth mentioning that use of other dataset preprocessing techniques have not been done. It could be a topic for other possible research which is out of scope of current.
 
 For implementing a related work solutions I have labeled every sentence with one of four sentiment labels which was correct in my personal opinion as a novice investor. The distibution of labels is shown of Pic. ~\ref{fig:labels}
 
@@ -273,7 +279,7 @@ where \quad ACC(z, \hat{z}) = \frac{\left|\{z_i == \hat{z}_i \mid i = 0...n\}\ri
   \end{align}
 
 
-I also came up with a metric Stock Possible Profit Percent Score or S3PS for short:
+I also came up with a metric called Stock Possible Profit Percent Score or S3PS for short:
 \begin{align}
 S3PS(y, \hat{y}) = 100 * [\prod_{i=0}^{n-1}{(1 + C_i)} - 1],
 \end{align}
@@ -288,7 +294,7 @@ where \quad C_i = \begin{dcases*}
 where \quad P_i = \left| 1 - (y_{i+1}/y_{i}) \right| \nonumber 
 \end{align}
 
-It is based on SOAS but represents possible percentage gain if we follow a strategy sugested by model.
+It is based on SOAS but represents possible percentage gain if we follow a strategy suggested by model.
 
 
 \subsection{Experiment Setup}
@@ -296,7 +302,7 @@ I setup the experiment and train the proposed model for 5000 episodes (epochs).
 The hyperparameters are show in Tab.~\ref{tab:hyperparams}
 It was convinient to run training procedure in jupyter notebook, so I represented learning algorithm on the graph as shown in \texttt{/notebooks/lstm-gym-embeddings.ipynb}
 
-For the sake of experimenting I also experimented with bert embeddings using sentence transformers and \href{https://huggingface.co/cointegrated/rubert-tiny}{rubert-tiny} pretraind model.
+I also experimented with bert embeddings using sentence transformers and \href{https://huggingface.co/cointegrated/rubert-tiny}{rubert-tiny} pretraind model.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -325,14 +331,15 @@ For the sake of experimenting I also experimented with bert embeddings using sen
 
 
 \subsection{Baselines}
-First of all I implemented a baselines with TF-IDF embeddings and multiple linear or non-liner method over it. 
+\label{sec:baseline}
+First of all I implemented a baselines with TF-IDF embeddings and multiple linear or non-linear methods over it. 
 I got some results to start with and some functions which helped me in the future solutions.
 For more info, please visit a \texttt{/notebooks/baseline.ipynb}
 
 \section{Results}
 \label{sec:results}
 
-In the Tab. \ref{tab:results} we see that 
+In the Tab. \ref{tab:results} I refer to achieved results and provide brief conclusions.
 
 \begin{table}[tbh!]
 \begin{center}
@@ -364,9 +371,8 @@ In the course of experimenting I implemented a prototype for each solution and g
 A baselines are good starting points, because some of them have reached the FCN proposed solution.
 
 Even though the proposed model did not overcome the LSTM by \cite{Sen_2021} in regression metrics, it showed a decent results in classification metrics.
-With that being said, it means the reinforcement learning techniques can be useful for solving a human-like tasks, including trading.
-
 S3PS metric shows how much percent we could possibly gain when following a strategy. 
+With that being said, it means the reinforcement learning techniques can be useful for solving a human-like tasks, including trading.
 
 The sample of model forecast results could be found in Fig.~\ref{fig:forecasts}.
 
@@ -378,13 +384,12 @@ The sample of model forecast results could be found in Fig.~\ref{fig:forecasts}.
 \end{figure}
 
 \section{Conclusion}
-It was quite interesting research for me, I have managed to make my own dataset\ref{sec:dataset}, implement available solutions using research reports which were mentioned in section\ref{sec:related}, explore \href{https://pypi.org/project/gymnasium/}{gymnasium deep q-learning framework}, and make my own RL environment where i did all the experiments \ref{sec:experiments}
+It was quite interesting research for me, I have managed to make my own dataset\ref{sec:dataset}, solved the task with baselines\ref{sec:baseline}, implement available solutions using research reports which were mentioned in section\ref{sec:related}, explore \href{https://pypi.org/project/gymnasium/}{gymnasium}  deep q-learning framework, and make my own RL environment where i did all the experiments \ref{sec:experiments}
 
-Its worth mentioning that there are plenty of other research possibilities left out of scope of current work, including hyperparameter tuning, model ensembles, different architectures, also sources of news articles, text preprocessing, other companies shares and so on.
+It's worth mentioning that there are plenty of other research possibilities left out of scope of current work, including hyperparameter tuning, model ensembles, different architectures, also sources of news articles, text preprocessing, other companies shares and so on.
 
 To conclude, reinforcement learning is a powerful machine learning technique that has shown great promise in solving complex real-world problems.
 
-\pagebreak
 \bibliographystyle{apalike}
 \bibliography{lit}
 \end{document}
