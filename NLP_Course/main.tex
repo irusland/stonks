@@ -85,23 +85,33 @@ Since i am using python as a tool in this research, I have tried to implement my
 The news were classified into moods such as positive, negative, neutral and one-hot encoded.
 The Lag was set to 3, as the best one mentioned in paper so model receives news from 3 previous time points. The hidden size was 42, this parameter controls the number of parameters in the LSTM layer, and thus affects the model's capacity to capture complex patterns and dependencies in the input data.
 
-After implementation I achieved pretty decent results which will be described in Results\ref{sec:results}
+After implementation and 100 epochs of MSELoss via Adam optimisation algorithm I achieved pretty decent results which will be described in Results\ref{sec:results}
 
 \subsection{Sequence learning using Fuzzy logic}
 
-A Self-Organizing Fuzzy Neural Network is proposed in paper by \cite{SalimiBadr2022}
+A Self-Organizing Fuzzy Neural Network is proposed by \cite{SalimiBadr2022}.
 SOFNN is a type of artificial neural network that combines the techniques of fuzzy logic and neural networks.
 Interestingly enough, this architecture solves the task of unsupervised learning.
 It's designed to automatically identify the underlying structure of the data and create fuzzy rules that accurately describe the input-output relationship of the system being modeled. It consists of four layers: input layer, fuzzy layer, normalization layer, and output layer.
 The learning process in SOFNN involves the self-organization of the fuzzy rules, which are generated through a clustering process that groups similar data points together and determines the centers of the fuzzy sets. 
-These fuzzy rules are then optimized through a gradient descent algorithm that adjusts the weights and biases to minimize the error between the network output and the desired output.
+These fuzzy rules are then optimized to minimize the error between the network output and the desired output.
 
-
-
-
+While implementing an architecture, for I chose KMeans clusterization algorithm \cite{Hartigan1979} for sequence locator, the module which is responsible for finding the best matching fuzzy rule for a given input pattern with the number of clusters equal to 4. 
+For sequence identifier I have used a two layered fully connected network with 100 neuons on each layer.
+I have experimented with different optimisers, losses and learning rates, but sadly enough, was not able to get satisfactory results.
 
 
 \section{Model Description}
+The techniques and experiments in related papers got me thinking about combining it with reinforcement learning techniques.
+Because reinforcement Learning, is a type of machine learning in which an agent learns how to take actions in an environment in order to maximize a reward.
+
+The environment ---------------------------------
+
+For the agent action space I chose 3 discrete numbers, representing a stages
+
+
+
+
 Here you need to write a detailed description of your approach. It is important to mention that this description should give more details than the descriptions from section \ref{sec:related}\footnote{This is an example of internal references and footnotes at the same time.}. 
 
 You will likely be providing a figure to better present your approach. A sample circle is presented on Fig.~\ref{fig:circle}.
