@@ -1,4 +1,4 @@
-# STONKS - Stock Market Forecasting Using News Articles With Reinforcement An Sequence Learning
+# STONKS - Stock Market Forecasting Using News Articles With Reinforcement And Sequence Learning
 A final project for MIPT NLP 2023 course https://ods.ai/tracks/nlp-course-spring-23/competitions/final-projects-nlp-course-spring-23
 
 ## [Report.pdf](report.pdf) 
