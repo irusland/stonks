@@ -73,28 +73,49 @@ or they could be inline, e.g. if you want to describe the used variables, like $
 \end{figure}
 
 \section{Dataset}
-In this section, you need to describe the dataset(s) you are working with. 
-An example dataset we will use is WikiText-2. Please mention a paper where it was presented, e.g. WikiText-2 was presented in~\cite{merity2017pointer}. Please provide guidance on how to obtain the dataset\footnote{The one way to do it is to include a link to the website, where it could be downloaded from. Like~\href{https://blog.einstein.ai/the-wikitext-long-term-dependency-language-modeling-dataset/}{this}.}. It is important to mention that the dataset you use must be available for the research purposes. So please make sure about that.
 
-Your description will likely be including a table. On the Tab.~\ref{tab:statistics} you can see the statistics for the mentioned dataset. It is important to notice that there is a split of the dataset and this split is covered by the description.
+For the task of predicting stock market i needed a dataset with news articles and current market state.
+I have researched for avalable datasets, and there where plenty of twitter's related ones.
+I wanted to experiment on Russian stock market via using Russian news. 
+And specifically, i did not chose the existing news datasets because they were too broad on topics. My goal was to process only financial related articles.
+So my choice was the Finam's newsline\footnote{Raw content from Finam's newline could be found ~\href{https://www.finam.ru/publications/selection/united/}{here}.} also i was their client.
+
+I should mention that, it was not easy to get it downloaded. 
+My first naive approach was to just load it using \href{https://pypi.org/project/requests/}{python requests}. But it turned out that they had an interface, where you need to click on the button in order to load another portion of news. So i discovered \href{https://pypi.org/project/selenium/}{python selenium}, a new approach to emulate human-like gestures and button clicks on the web page.
+
+The notebook \texttt{/notebooks/news-scraping.ipynb} consist of scraping a web page with news.
+
+It is important to mention that the dataset is available for the research purposes. 
+Finam does allow to use the information with giving a link to in according to \href{https://www.finam.ru/about/copyright/}{copyright policy}
+
+The second stage in the notebook \texttt{/notebooks/stocks-dataset.ipynb} was to load a stock market values from stock exchange. 
+As an employee of Tinkoff bank and an active contributor of \href{https://github.com/Tinkoff/invest-python}{invest-python library} i used the Tinkoff Investments OpenAPI \footnote{Tinkoff Invest OpenAPI could be found ~\href{https://www.tinkoff.ru/invest/open-api/}{here}.} to load the Sberbank privileged shares with FIGI number \texttt{BBG0047315Y7} for the period of previous year. I chose the Sberbank shares instrument because it has high liquidity and high volatility. I believe that such instrument is quite popular among investors.
+
+Having to separate datasets I have joined them together by matching a \texttt{date} column that contained current date. 
+See the details in \texttt{notebooks/dataset.ipynb}.
+
+I represent some statistics of resulting StocksNews dataset on Tab.~\ref{tab:statistics} The dataset was split into two parts: train and test with proportion of 88/22 percent accordingy. It's important to mention that this is a time series dataset so I did not use any king of shuffling. 
 
 \begin{table}[tbh!]
 \begin{center}
-\begin{tabular}[t]{|l|ccc|}
+\begin{tabular}[t]{|l|cc|}
 \hline
 %\cline{2-4}
- & Train & Valid & Test \\
+ & Train & Test \\
 \hline
-Articles & 600 & 60 & 60  \\
-Tokens& 2,088,628 & 217,646 & 245,569 \\
-Vocabulary size & \multicolumn{3}{c|}{33,278} \\
-Out of Vocab rate &  \multicolumn{3}{c|}{2.6\%}  \\
+Proportion & 0.88 & 0.22  \\
+Size & 23879 & 6735 \\
+Vocabulary size & \multicolumn{2}{c|}{16507} \\
+Date range & 2022.05.08 - 2023.02.10 & 2023.02.10 - 2023.05.06 \\
+
 \hline
 \end{tabular}
-\caption{Statistics of the WikiText-2. The out of vocabulary (OoV) rate notes what percentage of tokens have been replaced by an $\langle unk \rangle$ token. The token count includes newlines which add to the structure of the dataset.}
+\caption{Statistics of the StocksNews dataset. The out of vocabulary (OoV) rate notes what percentage of tokens have been replaced by an $\langle unk \rangle$ token. The token count includes newlines which add to the structure of the dataset.}
 \label{tab:statistics}
 \end{center}
 \end{table}
+
+It's worth mentioning that the using the other dataset preprocessing techniques have not been done and could be other possible research topics which is out of scope of current.
 
 If you were collecting the dataset on your own please describe the collection procedure, like criteria were used to filter the documents, the pre-processing steps, etc. It is preferable that you release your dataset for the public, but you are not obliged to do this. Please make sure that you have legal rights to collect and distribute the data you were working with. We recommend you to look at C4Corpus and how it is licensed to make your corpora. C4Corpus is described in~\cite{habernal2016c4corpus}.
 
