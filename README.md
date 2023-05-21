@@ -32,10 +32,12 @@ make notebook
 
 ## Contact
 
-[telegram](https://t.me/irusland)
+[telegram](https://t.me/irusland) & [email](mailto:irusland@icoud.com)
 
-[email](mailto:irusland@icoud.com)
+## Credits
 
+[Tinkoff](https://www.tinkoff.ru) &
+[Finam](https://www.finam.ru)
 
 ## License
 
